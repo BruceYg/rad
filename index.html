@@ -20,7 +20,7 @@
     />
     <meta
       property="og:description"
-      content="RAD detects jailbreak attempts with retrieval-augmented reasoning, training-free updates, and a controllable safety-utility trade-off."
+      content="RAD is a retrieval-augmented framework for jailbreak detection with training-free updates and controllable safety-utility trade-offs."
     />
     <meta property="og:image" content="assets/rad-pipeline.svg" />
 
@@ -40,178 +40,203 @@
       </nav>
     </header>
 
-    <main id="top">
-      <section class="hero">
-        <div class="hero-inner">
-          <div class="hero-copy">
-            <p class="eyebrow">Accepted Paper</p>
-            <h1>Retrieval-Augmented Defense: Adaptive and Controllable Jailbreak Prevention for Large Language Models</h1>
-            <p class="subtitle">
-              A retrieval-based framework for jailbreak detection that adapts to emerging attack strategies without
-              retraining and exposes a tunable safety-utility trade-off.
-            </p>
+    <main id="top" class="page">
+      <section class="paper-header" aria-labelledby="paper-title">
+        <p class="venue">arXiv preprint · cs.CR</p>
+        <h1 id="paper-title">
+          Retrieval-Augmented Defense: Adaptive and Controllable Jailbreak Prevention for Large Language Models
+        </h1>
 
-            <ul class="authors" aria-label="Authors">
-              <li>Guangyu Yang</li>
-              <li>Jinghong Chen</li>
-              <li>Jingbiao Mei</li>
-              <li>Weizhe Lin</li>
-              <li>Bill Byrne</li>
-            </ul>
-            <p class="affiliation">Department of Engineering, University of Cambridge</p>
+        <ul class="authors" aria-label="Authors">
+          <li>Guangyu Yang</li>
+          <li>Jinghong Chen</li>
+          <li>Jingbiao Mei</li>
+          <li>Weizhe Lin</li>
+          <li>Bill Byrne</li>
+        </ul>
+        <p class="affiliation">Department of Engineering, University of Cambridge</p>
 
-            <div class="actions" aria-label="Paper links">
-              <a class="button primary" href="https://arxiv.org/pdf/2508.16406" rel="noopener">Paper</a>
-              <a class="button" href="https://arxiv.org/abs/2508.16406" rel="noopener">arXiv</a>
-              <a
-                class="button"
-                href="https://anonymous.4open.science/r/Retrieval-Augmented-Defense-02F0"
-                rel="noopener"
-              >
-                Code &amp; Data
-              </a>
-            </div>
-          </div>
-
-          <figure class="hero-figure">
-            <img src="assets/rad-pipeline.svg" alt="Diagram of the RAD pipeline from prompt retrieval to voting." />
-            <figcaption>RAD retrieves related jailbreak examples, reasons about strategy and intent, and votes on risk.</figcaption>
-          </figure>
+        <div class="paper-links" aria-label="Paper links">
+          <a href="https://arxiv.org/pdf/2508.16406" rel="noopener">Paper PDF</a>
+          <a href="https://arxiv.org/abs/2508.16406" rel="noopener">arXiv</a>
+          <a href="https://anonymous.4open.science/r/Retrieval-Augmented-Defense-02F0" rel="noopener">
+            Code and data
+          </a>
+          <a href="#citation">BibTeX</a>
         </div>
       </section>
 
-      <section class="section summary-section" aria-labelledby="summary-title">
-        <div class="section-inner">
-          <h2 id="summary-title">At a Glance</h2>
-          <div class="summary-grid">
-            <article class="summary-card">
-              <span class="metric">Training-free</span>
-              <p>New jailbreak strategies can be added through the retrieval database rather than model retraining.</p>
-            </article>
-            <article class="summary-card">
-              <span class="metric">Controllable</span>
-              <p>A tunable threshold lets deployments choose different points on the safety-utility frontier.</p>
-            </article>
-            <article class="summary-card">
-              <span class="metric">StrongREJECT</span>
-              <p>Experiments evaluate RAD against strong attacks including PAP and PAIR while tracking benign refusal rates.</p>
-            </article>
+      <figure class="pipeline-figure">
+        <img src="assets/rad-pipeline.svg" alt="Overview diagram of the RAD pipeline." />
+        <figcaption>
+          RAD retrieves related jailbreak examples, infers the hidden user query and strategy, classifies harmfulness,
+          and compares P(harmful | x) with a deployment threshold.
+        </figcaption>
+      </figure>
+
+      <section id="abstract" class="section content-grid" aria-labelledby="abstract-title">
+        <h2 id="abstract-title">Abstract</h2>
+        <div class="section-body">
+          <p>
+            Large language models remain vulnerable to jailbreak attacks that disguise harmful intent inside adversarial
+            prompts. These attacks change quickly, which makes it difficult for defense systems to adapt without
+            retraining, and a single fixed blocking policy may not suit all deployment settings.
+          </p>
+          <p>
+            Retrieval-Augmented Defense (RAD) addresses these challenges by storing known attack examples in a retrieval
+            database. For a new prompt, RAD retrieves related examples, reasons about the likely original user query and
+            jailbreak strategy, and estimates the probability that the prompt is harmful. The resulting score can be
+            thresholded to choose an operating point on the safety-utility trade-off.
+          </p>
+        </div>
+      </section>
+
+      <section class="section content-grid" aria-labelledby="contributions-title">
+        <h2 id="contributions-title">Contributions</h2>
+        <ol class="contribution-list">
+          <li>
+            <strong>Training-free adaptation.</strong>
+            New attack examples can be added to the retrieval database without updating the target model.
+          </li>
+          <li>
+            <strong>Detection rather than generation control.</strong>
+            RAD estimates prompt harmfulness and only forwards prompts that fall below the chosen threshold.
+          </li>
+          <li>
+            <strong>Safety-utility evaluation.</strong>
+            The paper studies operating curves under false-refusal-rate budgets instead of a single fixed threshold.
+          </li>
+        </ol>
+      </section>
+
+      <section id="method" class="section" aria-labelledby="method-title">
+        <div class="section-heading">
+          <h2 id="method-title">Method</h2>
+          <p>
+            The defender is an online pipeline with five stages after an offline database construction step.
+          </p>
+        </div>
+
+        <div class="method-steps" aria-label="RAD pipeline steps">
+          <article>
+            <span>1</span>
+            <h3>Retrieve</h3>
+            <p>Embed the input prompt and retrieve similar jailbreak examples from the database.</p>
+          </article>
+          <article>
+            <span>2</span>
+            <h3>Rerank</h3>
+            <p>Select the most relevant strategies, including a no-strategy option for benign prompts.</p>
+          </article>
+          <article>
+            <span>3</span>
+            <h3>Extract</h3>
+            <p>Infer candidate underlying user queries using the retrieved strategy and guidance.</p>
+          </article>
+          <article>
+            <span>4</span>
+            <h3>Classify</h3>
+            <p>Estimate harmfulness for each extracted query and associated strategy.</p>
+          </article>
+          <article>
+            <span>5</span>
+            <h3>Vote</h3>
+            <p>Aggregate evidence into P(harmful | x), then compare it with threshold tau.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="results" class="section content-grid" aria-labelledby="results-title">
+        <div>
+          <h2 id="results-title">Results</h2>
+          <p class="note">Lower attack score and lower false refusal rate are better.</p>
+        </div>
+        <div class="section-body">
+          <p>
+            On StrongREJECT, RAD reduces attack scores for strong jailbreak methods such as PAIR and PAP while keeping
+            benign false refusals low. The table below shows representative results for the Qwen-2.5-14B-Instruct target
+            model at threshold 0.5.
+          </p>
+
+          <div class="table-wrap" role="region" aria-label="Representative StrongREJECT results" tabindex="0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Defense</th>
+                  <th>PAIR-1</th>
+                  <th>PAIR-5</th>
+                  <th>PAP</th>
+                  <th>Template</th>
+                  <th>DAN</th>
+                  <th>FRR (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>No defense</th>
+                  <td>71.45</td>
+                  <td>85.50</td>
+                  <td>81.51</td>
+                  <td>24.99</td>
+                  <td>9.15</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <th>Safety Context Retrieval</th>
+                  <td>36.10</td>
+                  <td>62.46</td>
+                  <td>43.37</td>
+                  <td>0.54</td>
+                  <td>2.38</td>
+                  <td>0.32</td>
+                </tr>
+                <tr>
+                  <th>RAD-Sim-14B</th>
+                  <td>20.09</td>
+                  <td>39.06</td>
+                  <td>35.22</td>
+                  <td>0.15</td>
+                  <td>0.18</td>
+                  <td>1.28</td>
+                </tr>
+                <tr>
+                  <th>RAD-Base-14B</th>
+                  <td>13.34</td>
+                  <td>43.49</td>
+                  <td>30.91</td>
+                  <td>0.03</td>
+                  <td>0.18</td>
+                  <td>2.56</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      <section id="abstract" class="section" aria-labelledby="abstract-title">
-        <div class="section-inner text-layout">
-          <div>
-            <p class="section-kicker">Abstract</p>
-            <h2 id="abstract-title">Adaptive Defense Without Retraining</h2>
-          </div>
-          <div class="body-copy">
-            <p>
-              Large Language Models (LLMs) remain vulnerable to jailbreak attacks, which attempt to elicit harmful
-              responses from LLMs. The evolving nature and diversity of these attacks pose many challenges for defense
-              systems, including adaptation to counter emerging attack strategies without costly retraining and control
-              of the trade-off between safety and utility.
-            </p>
-            <p>
-              To address these challenges, RAD incorporates a database of known attack examples into a retrieval-augmented
-              generation workflow. The system infers the underlying malicious user query and jailbreak strategy, enabling
-              training-free updates and practical control over safety and utility.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="method" class="section method-section" aria-labelledby="method-title">
-        <div class="section-inner">
-          <div class="section-heading">
-            <p class="section-kicker">Method</p>
-            <h2 id="method-title">Retrieve, Reason, Classify, Vote</h2>
-          </div>
-
-          <div class="method-grid" aria-label="RAD pipeline steps">
-            <article class="method-step">
-              <span class="step-number">01</span>
-              <h3>Retrieve</h3>
-              <p>Find known jailbreak examples that are close to the incoming prompt.</p>
-            </article>
-            <article class="method-step">
-              <span class="step-number">02</span>
-              <h3>Rerank</h3>
-              <p>Prioritize the most relevant retrieved strategies for downstream analysis.</p>
-            </article>
-            <article class="method-step">
-              <span class="step-number">03</span>
-              <h3>Extract</h3>
-              <p>Infer the hidden user query and the attack strategy embedded in the prompt.</p>
-            </article>
-            <article class="method-step">
-              <span class="step-number">04</span>
-              <h3>Classify</h3>
-              <p>Estimate whether the prompt is harmful based on retrieved evidence and inferred intent.</p>
-            </article>
-            <article class="method-step">
-              <span class="step-number">05</span>
-              <h3>Vote</h3>
-              <p>Aggregate judgments into P(harmful | x), then compare it with a deployment threshold.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="results" class="section" aria-labelledby="results-title">
-        <div class="section-inner results-layout">
-          <div>
-            <p class="section-kicker">Results</p>
-            <h2 id="results-title">Safety-Utility Trade-Offs Across Operating Points</h2>
-          </div>
-          <div class="results-list">
-            <article>
-              <h3>Lower Attack Effectiveness</h3>
-              <p>RAD substantially reduces the effectiveness of strong jailbreak attacks such as PAP and PAIR.</p>
-            </article>
-            <article>
-              <h3>Low Benign Rejection</h3>
-              <p>The evaluation tracks refusal behavior on benign queries, including synthetic benign data and general QA benchmarks.</p>
-            </article>
-            <article>
-              <h3>Training-Free Adaptation</h3>
-              <p>Adding examples of recent jailbreak attacks improves defense performance without degrading previously seen attacks.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section id="citation" class="section citation-section" aria-labelledby="citation-title">
-        <div class="section-inner text-layout">
-          <div>
-            <p class="section-kicker">Citation</p>
-            <h2 id="citation-title">BibTeX</h2>
-          </div>
-          <div class="citation-box">
-            <pre><code>@misc{yang2025retrievalaugmenteddefense,
-  title        = {Retrieval-Augmented Defense: Adaptive and Controllable Jailbreak Prevention for Large Language Models},
-  author       = {Yang, Guangyu and Chen, Jinghong and Mei, Jingbiao and Lin, Weizhe and Byrne, Bill},
-  year         = {2025},
-  eprint       = {2508.16406},
+      <section id="citation" class="section content-grid" aria-labelledby="citation-title">
+        <h2 id="citation-title">Citation</h2>
+        <div class="citation-box">
+          <pre><code>@misc{yang2025retrievalaugmenteddefense,
+  title         = {Retrieval-Augmented Defense: Adaptive and Controllable Jailbreak Prevention for Large Language Models},
+  author        = {Yang, Guangyu and Chen, Jinghong and Mei, Jingbiao and Lin, Weizhe and Byrne, Bill},
+  year          = {2025},
+  eprint        = {2508.16406},
   archivePrefix = {arXiv},
-  primaryClass = {cs.CR},
-  doi          = {10.48550/arXiv.2508.16406}
+  primaryClass  = {cs.CR},
+  doi           = {10.48550/arXiv.2508.16406}
 }</code></pre>
-          </div>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <div class="footer-inner">
-        <p>RAD: Retrieval-Augmented Defense</p>
-        <p>
-          <a href="https://doi.org/10.48550/arXiv.2508.16406" rel="noopener">DOI</a>
-          <span aria-hidden="true">/</span>
-          <a href="https://arxiv.org/abs/2508.16406" rel="noopener">arXiv:2508.16406</a>
-        </p>
-      </div>
+      <p>Retrieval-Augmented Defense</p>
+      <p>
+        <a href="https://doi.org/10.48550/arXiv.2508.16406" rel="noopener">DOI</a>
+        <span aria-hidden="true">/</span>
+        <a href="https://arxiv.org/abs/2508.16406" rel="noopener">arXiv:2508.16406</a>
+      </p>
     </footer>
   </body>
 </html>

@@ -9,7 +9,7 @@
     />
     <meta
       name="keywords"
-      content="retrieval-augmented defense, RAD, LLM safety, jailbreak defense, retrieval augmented generation"
+      content="retrieval-augmented defense, RAD, LLM safety, jailbreak defense, jailbreak detection"
     />
     <meta name="author" content="Guangyu Yang, Jinghong Chen, Jingbiao Mei, Weizhe Lin, Bill Byrne" />
 
@@ -22,141 +22,143 @@
       property="og:description"
       content="RAD is a retrieval-augmented framework for jailbreak detection with training-free updates and controllable safety-utility trade-offs."
     />
-    <meta property="og:image" content="assets/rad-pipeline.svg" />
+    <meta property="og:image" content="assets/rad-diagram.png" />
 
     <title>Retrieval-Augmented Defense</title>
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <nav class="nav" aria-label="Primary navigation">
-        <a class="brand" href="#top" aria-label="RAD project home">RAD</a>
-        <div class="nav-links">
-          <a href="#abstract">Abstract</a>
-          <a href="#method">Method</a>
-          <a href="#results">Results</a>
-          <a href="#citation">Citation</a>
-        </div>
-      </nav>
-    </header>
+    <main>
+      <section class="hero publication-header">
+        <div class="container is-max-desktop">
+          <h1 class="title publication-title">
+            Retrieval-Augmented Defense: Adaptive and Controllable Jailbreak Prevention for Large Language Models
+          </h1>
+          <h2 class="publication-venue">arXiv:2508.16406</h2>
 
-    <main id="top" class="page">
-      <section class="paper-header" aria-labelledby="paper-title">
-        <p class="venue">arXiv preprint · cs.CR</p>
-        <h1 id="paper-title">
-          Retrieval-Augmented Defense: Adaptive and Controllable Jailbreak Prevention for Large Language Models
-        </h1>
+          <div class="publication-authors">
+            <span class="author-block">Guangyu Yang,</span>
+            <span class="author-block">Jinghong Chen,</span>
+            <span class="author-block">Jingbiao Mei,</span>
+            <span class="author-block">Weizhe Lin,</span>
+            <span class="author-block">Bill Byrne</span>
+          </div>
 
-        <ul class="authors" aria-label="Authors">
-          <li>Guangyu Yang</li>
-          <li>Jinghong Chen</li>
-          <li>Jingbiao Mei</li>
-          <li>Weizhe Lin</li>
-          <li>Bill Byrne</li>
-        </ul>
-        <p class="affiliation">Department of Engineering, University of Cambridge</p>
+          <div class="publication-affiliation">Department of Engineering, University of Cambridge</div>
 
-        <div class="paper-links" aria-label="Paper links">
-          <a href="https://arxiv.org/pdf/2508.16406" rel="noopener">Paper PDF</a>
-          <a href="https://arxiv.org/abs/2508.16406" rel="noopener">arXiv</a>
-          <a href="https://anonymous.4open.science/r/Retrieval-Augmented-Defense-02F0" rel="noopener">
-            Code and data
-          </a>
-          <a href="#citation">BibTeX</a>
-        </div>
-      </section>
-
-      <figure class="pipeline-figure">
-        <img src="assets/rad-pipeline.svg" alt="Overview diagram of the RAD pipeline." />
-        <figcaption>
-          RAD retrieves related jailbreak examples, infers the hidden user query and strategy, classifies harmfulness,
-          and compares P(harmful | x) with a deployment threshold.
-        </figcaption>
-      </figure>
-
-      <section id="abstract" class="section content-grid" aria-labelledby="abstract-title">
-        <h2 id="abstract-title">Abstract</h2>
-        <div class="section-body">
-          <p>
-            Large language models remain vulnerable to jailbreak attacks that disguise harmful intent inside adversarial
-            prompts. These attacks change quickly, which makes it difficult for defense systems to adapt without
-            retraining, and a single fixed blocking policy may not suit all deployment settings.
-          </p>
-          <p>
-            Retrieval-Augmented Defense (RAD) addresses these challenges by storing known attack examples in a retrieval
-            database. For a new prompt, RAD retrieves related examples, reasons about the likely original user query and
-            jailbreak strategy, and estimates the probability that the prompt is harmful. The resulting score can be
-            thresholded to choose an operating point on the safety-utility trade-off.
-          </p>
+          <div class="publication-links" aria-label="Paper links">
+            <a class="button" href="https://arxiv.org/pdf/2508.16406" target="_blank" rel="noopener">
+              <span class="button-icon">PDF</span>
+              <span>Paper</span>
+            </a>
+            <a class="button" href="https://arxiv.org/abs/2508.16406" target="_blank" rel="noopener">
+              <span class="button-icon">arXiv</span>
+              <span>arXiv</span>
+            </a>
+            <a
+              class="button"
+              href="https://anonymous.4open.science/r/Retrieval-Augmented-Defense-02F0"
+              target="_blank"
+              rel="noopener"
+            >
+              <span class="button-icon">Git</span>
+              <span>Code</span>
+            </a>
+            <a class="button" href="assets/rad-diagram.pdf" target="_blank" rel="noopener">
+              <span class="button-icon">Fig</span>
+              <span>Figure PDF</span>
+            </a>
+          </div>
         </div>
       </section>
 
-      <section class="section content-grid" aria-labelledby="contributions-title">
-        <h2 id="contributions-title">Contributions</h2>
-        <ol class="contribution-list">
-          <li>
-            <strong>Training-free adaptation.</strong>
-            New attack examples can be added to the retrieval database without updating the target model.
-          </li>
-          <li>
-            <strong>Detection rather than generation control.</strong>
-            RAD estimates prompt harmfulness and only forwards prompts that fall below the chosen threshold.
-          </li>
-          <li>
-            <strong>Safety-utility evaluation.</strong>
-            The paper studies operating curves under false-refusal-rate budgets instead of a single fixed threshold.
-          </li>
-        </ol>
-      </section>
-
-      <section id="method" class="section" aria-labelledby="method-title">
-        <div class="section-heading">
-          <h2 id="method-title">Method</h2>
-          <p>
-            The defender is an online pipeline with five stages after an offline database construction step.
-          </p>
-        </div>
-
-        <div class="method-steps" aria-label="RAD pipeline steps">
-          <article>
-            <span>1</span>
-            <h3>Retrieve</h3>
-            <p>Embed the input prompt and retrieve similar jailbreak examples from the database.</p>
-          </article>
-          <article>
-            <span>2</span>
-            <h3>Rerank</h3>
-            <p>Select the most relevant strategies, including a no-strategy option for benign prompts.</p>
-          </article>
-          <article>
-            <span>3</span>
-            <h3>Extract</h3>
-            <p>Infer candidate underlying user queries using the retrieved strategy and guidance.</p>
-          </article>
-          <article>
-            <span>4</span>
-            <h3>Classify</h3>
-            <p>Estimate harmfulness for each extracted query and associated strategy.</p>
-          </article>
-          <article>
-            <span>5</span>
-            <h3>Vote</h3>
-            <p>Aggregate evidence into P(harmful | x), then compare it with threshold tau.</p>
-          </article>
+      <section class="hero teaser">
+        <div class="container is-max-desktop">
+          <img class="teaser-image" src="assets/rad-diagram.png" alt="RAD pipeline overview." />
+          <h2 class="subtitle">
+            <strong>TL;DR:</strong> RAD detects jailbreak prompts by retrieving related attack examples, reasoning about
+            the hidden user query and jailbreak strategy, and voting over harmfulness estimates before forwarding a
+            prompt to the target model.
+          </h2>
         </div>
       </section>
 
-      <section id="results" class="section content-grid" aria-labelledby="results-title">
-        <div>
-          <h2 id="results-title">Results</h2>
-          <p class="note">Lower attack score and lower false refusal rate are better.</p>
+      <section id="abstract" class="section is-light">
+        <div class="container is-max-desktop">
+          <h2 class="section-title">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Large language models remain vulnerable to jailbreak attacks, which attempt to elicit harmful responses
+              from LLMs. The evolving nature and diversity of these attacks pose challenges for defense systems,
+              including adaptation to emerging attack strategies without costly retraining and control over the
+              trade-off between safety and utility.
+            </p>
+            <p>
+              Retrieval-Augmented Defense (RAD) incorporates a database of known attack examples into a
+              retrieval-augmented workflow. Given an input prompt, RAD retrieves related jailbreak examples, infers the
+              underlying user query and attack strategy, classifies harmfulness, and aggregates judgments into a
+              probability that can be thresholded for deployment.
+            </p>
+          </div>
         </div>
-        <div class="section-body">
-          <p>
-            On StrongREJECT, RAD reduces attack scores for strong jailbreak methods such as PAIR and PAP while keeping
-            benign false refusals low. The table below shows representative results for the Qwen-2.5-14B-Instruct target
-            model at threshold 0.5.
-          </p>
+      </section>
+
+      <section id="framework" class="section">
+        <div class="container">
+          <h2 class="section-title">Framework Overview</h2>
+          <div class="figure-block">
+            <img src="assets/rad-diagram.png" alt="RAD framework overview." />
+          </div>
+          <div class="content has-text-justified narrow">
+            <p>
+              RAD separates jailbreak generation from defense. The attacker combines a harmful user query with a
+              jailbreak strategy to form an adversarial prompt. The defender then runs a retrieval-based detector before
+              the target model sees the prompt. If the estimated probability of harmfulness exceeds a selected threshold,
+              the system blocks the request; otherwise it forwards the prompt to the target model.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="method" class="section">
+        <div class="container">
+          <h2 class="section-title">Method</h2>
+          <div class="method-grid">
+            <article>
+              <h3>1. Retrieve</h3>
+              <p>Retrieve similar prompts and jailbreak strategies from a database of known attack examples.</p>
+            </article>
+            <article>
+              <h3>2. Rerank</h3>
+              <p>Select the most relevant retrieved evidence, including a no-strategy option for benign inputs.</p>
+            </article>
+            <article>
+              <h3>3. Extract</h3>
+              <p>Infer candidate underlying user queries from the prompt and retrieved jailbreak strategies.</p>
+            </article>
+            <article>
+              <h3>4. Classify</h3>
+              <p>Estimate harmfulness for each inferred query and associated strategy.</p>
+            </article>
+            <article>
+              <h3>5. Vote</h3>
+              <p>Aggregate judgments into P(harmful | x), then compare the score with a deployment threshold.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="results" class="section is-light">
+        <div class="container is-max-desktop">
+          <h2 class="section-title">Representative Results</h2>
+          <div class="content has-text-justified">
+            <p>
+              On StrongREJECT, RAD reduces attack scores for strong jailbreak methods such as PAIR and PAP while
+              keeping false refusal rates low. The table below shows representative Qwen-2.5-14B-Instruct target-model
+              results at classification threshold 0.5. Lower attack score and lower FRR are better.
+            </p>
+          </div>
 
           <div class="table-wrap" role="region" aria-label="Representative StrongREJECT results" tabindex="0">
             <table>
@@ -214,9 +216,9 @@
         </div>
       </section>
 
-      <section id="citation" class="section content-grid" aria-labelledby="citation-title">
-        <h2 id="citation-title">Citation</h2>
-        <div class="citation-box">
+      <section id="citation" class="section">
+        <div class="container is-max-desktop">
+          <h2 class="section-title align-left">BibTeX</h2>
           <pre><code>@misc{yang2025retrievalaugmenteddefense,
   title         = {Retrieval-Augmented Defense: Adaptive and Controllable Jailbreak Prevention for Large Language Models},
   author        = {Yang, Guangyu and Chen, Jinghong and Mei, Jingbiao and Lin, Weizhe and Byrne, Bill},
@@ -230,13 +232,13 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <p>Retrieval-Augmented Defense</p>
-      <p>
-        <a href="https://doi.org/10.48550/arXiv.2508.16406" rel="noopener">DOI</a>
-        <span aria-hidden="true">/</span>
-        <a href="https://arxiv.org/abs/2508.16406" rel="noopener">arXiv:2508.16406</a>
-      </p>
+    <footer class="footer">
+      <div class="container is-max-desktop">
+        <p>
+          This website follows the style of the
+          <a href="https://dannymcy.github.io/coopera/" target="_blank" rel="noopener">COOPERA project page</a>.
+        </p>
+      </div>
     </footer>
   </body>
 </html>

@@ -511,8 +511,14 @@
 
       <section id="citation" class="section">
         <div class="container is-max-desktop">
-          <h2 class="section-title align-left">BibTeX</h2>
-          <pre><code>@inproceedings{yang-etal-2026-retrieval,
+          <div class="citation-heading">
+            <h2 class="section-title align-left">BibTeX</h2>
+            <button id="copy-citation" class="copy-button" type="button" aria-label="Copy BibTeX citation">
+              <span class="copy-icon" aria-hidden="true"></span>
+              <span class="copy-label" aria-live="polite">Copy BibTeX</span>
+            </button>
+          </div>
+          <pre><code id="bibtex-code">@inproceedings{yang-etal-2026-retrieval,
     title = "Retrieval-Augmented Defense: Adaptive and Controllable Jailbreak Prevention for Large Language Models",
     author = "Yang, Guangyu  and
       Chen, Jinghong  and
@@ -538,5 +544,48 @@
       </section>
     </main>
 
+    <script>
+      const copyButton = document.getElementById("copy-citation");
+      const copyLabel = copyButton.querySelector(".copy-label");
+      const citation = document.getElementById("bibtex-code");
+      let resetLabelTimeout;
+
+      copyButton.addEventListener("click", async () => {
+        const citationText = citation.textContent;
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(citationText);
+          } else {
+            const textArea = document.createElement("textarea");
+            textArea.value = citationText;
+            textArea.setAttribute("readonly", "");
+            textArea.className = "clipboard-fallback";
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            let copied = false;
+            try {
+              copied = document.execCommand("copy");
+            } finally {
+              textArea.remove();
+            }
+
+            if (!copied) {
+              throw new Error("Copy command failed");
+            }
+          }
+
+          copyLabel.textContent = "Copied";
+        } catch (error) {
+          copyLabel.textContent = "Copy failed";
+        }
+
+        clearTimeout(resetLabelTimeout);
+        resetLabelTimeout = setTimeout(() => {
+          copyLabel.textContent = "Copy BibTeX";
+        }, 2000);
+      });
+    </script>
   </body>
 </html>

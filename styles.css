@@ -144,8 +144,8 @@ a:hover {
 }
 
 .acl-anthology-icon {
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 2.2em;
+  height: 0.82rem;
   object-fit: contain;
 }
 
@@ -340,25 +340,27 @@ code {
 }
 
 .copy-button {
-  min-width: 8.9rem;
-  min-height: 2.35rem;
+  --copy-button-bg: var(--blue);
+
+  min-width: 10.5rem;
+  min-height: 2.75rem;
+  margin-left: auto;
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-  border: 1px solid var(--line);
+  gap: 0.65rem;
+  border: 1px solid transparent;
   border-radius: 4px;
-  padding: 0.4rem 0.75rem;
-  background: #ffffff;
-  color: var(--ink);
-  font: 600 0.9rem/1.2 "Noto Sans", Arial, sans-serif;
+  padding: 0.6rem 1.1rem;
+  background: var(--copy-button-bg);
+  color: #ffffff;
+  font: 600 1rem/1.2 "Noto Sans", Arial, sans-serif;
   cursor: pointer;
 }
 
 .copy-button:hover {
-  border-color: #b5b5b5;
-  background: var(--light);
+  --copy-button-bg: #2468d0;
 }
 
 .copy-button:focus-visible {
@@ -367,12 +369,12 @@ code {
 }
 
 .copy-icon {
-  width: 0.85rem;
-  height: 0.85rem;
+  width: 0.95rem;
+  height: 0.95rem;
   border: 1.5px solid currentColor;
   border-radius: 2px;
-  background: #ffffff;
-  box-shadow: -3px -3px 0 0 #ffffff, -3px -3px 0 1.5px currentColor;
+  background: var(--copy-button-bg);
+  box-shadow: -3px -3px 0 0 var(--copy-button-bg), -3px -3px 0 1.5px currentColor;
 }
 
 .clipboard-fallback {
@@ -432,7 +434,4 @@ code {
     align-items: flex-start;
   }
 
-  .copy-button {
-    min-width: 8.4rem;
-  }
 }

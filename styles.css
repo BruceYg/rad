@@ -327,12 +327,54 @@ section[id] {
 }
 
 .stat-card {
+  position: relative;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 1.1rem 1.2rem;
-  background: #ffffff;
+  padding: 1.45rem 1.2rem 1.3rem;
+  background: linear-gradient(180deg, var(--accent-softer) 0%, #ffffff 65%);
   box-shadow: var(--shadow-sm);
   text-align: center;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-strong) 0%, var(--accent) 55%, #93a1ea 100%);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: #c9d3f2;
+  box-shadow: var(--shadow-md);
+}
+
+.stat-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  box-shadow: inset 0 0 0 1px rgb(63 79 184 / 14%);
+  transition: background-color 180ms ease;
+}
+
+.stat-card:hover .stat-icon {
+  background: var(--accent-row);
+}
+
+.stat-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
 }
 
 .stat-title {
@@ -353,10 +395,20 @@ section[id] {
 }
 
 .stat-label {
-  margin-top: 0.45rem;
+  margin-top: 0.6rem;
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.4;
+}
+
+.stat-label::before {
+  content: "";
+  display: block;
+  width: 1.75rem;
+  height: 2px;
+  margin: 0 auto 0.6rem;
+  border-radius: 999px;
+  background: #c9d3f2;
 }
 
 .method-note {

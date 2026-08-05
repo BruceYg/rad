@@ -634,7 +634,13 @@ tbody tr.rad-row th:first-child {
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
-tbody tr:hover {
+.model-group th {
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+tbody tr:not(.model-group):hover {
   background: #e9edfb;
 }
 

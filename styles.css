@@ -350,51 +350,13 @@ section[id] {
   line-height: 1.4;
 }
 
-.config-wrap {
-  width: min(100%, 640px);
-  margin: 2rem auto 0;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: #ffffff;
-  box-shadow: var(--shadow-sm);
-}
-
-.config-table {
-  width: 100%;
-  min-width: 0;
-  border-collapse: collapse;
-  font-size: 0.95rem;
-}
-
-.config-table th,
-.config-table td {
-  padding: 0.6rem 0.9rem;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-  white-space: normal;
-}
-
-.config-table thead th {
-  background: var(--accent-soft);
-  font-weight: 600;
-}
-
-.config-table tbody tr {
-  background: transparent;
-}
-
-.config-table tbody tr:last-child th,
-.config-table tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.config-note {
-  margin: 0;
-  padding: 0.75rem 0.9rem;
+.method-note {
+  width: min(100%, 720px);
+  margin: 1.75rem auto 0;
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   line-height: 1.5;
+  text-align: center;
 }
 
 .content-note {

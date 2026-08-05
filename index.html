@@ -170,27 +170,43 @@
             <img class="teaser-image" src="assets/rad-diagram.png" alt="RAD pipeline overview." />
           </figure>
           <h2 class="subtitle">
-            <strong>TL;DR:</strong> RAD detects jailbreak prompts by retrieving related attack examples, reasoning about
-            the hidden user query and jailbreak strategy, and voting over harmfulness estimates before forwarding a
-            prompt to the target model.
+            <strong>TL;DR:</strong> RAD is a retrieval-augmented jailbreak detector that adapts to evolving attacks
+            through training-free database updates and controls the safety&ndash;utility trade-off with a single
+            deployment threshold. Given an input prompt, RAD retrieves related attack examples, infers the hidden user
+            query and jailbreak strategy, and votes over harmfulness estimates before the prompt reaches the target
+            model.
           </h2>
 
           <div class="stat-grid">
             <div class="stat-card">
-              <div class="stat-value">&minus;51.4</div>
-              <div class="stat-label">PAIR-1 attack score on Qwen-2.5-14B (71.45 &rarr; 20.09)</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">&asymp; 0</div>
-              <div class="stat-label">attack score against Template and DAN attacks</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">1.28%</div>
-              <div class="stat-label">false refusal rate on benign queries (threshold 0.5)</div>
-            </div>
-            <div class="stat-card">
+              <div class="stat-title">Adaptable</div>
               <div class="stat-value">Training-free</div>
-              <div class="stat-label">counter new attacks by adding examples to the database</div>
+              <div class="stat-label">
+                counter newly discovered attacks by adding examples to the database &mdash; no retraining, no
+                forgetting
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-title">Controllable</div>
+              <div class="stat-value">&tau;</div>
+              <div class="stat-label">
+                a single threshold tunes the safety&ndash;utility trade-off to your deployment's FRR budget &mdash; RAD
+                forms the Pareto frontier
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-title">Utility-preserving</div>
+              <div class="stat-value">1.28%</div>
+              <div class="stat-label">
+                false refusal rate; general QA utility matches the undefended model (AlpacaEval 28.18 vs 28.49)
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-title">Strong defense</div>
+              <div class="stat-value">&minus;51.4</div>
+              <div class="stat-label">
+                PAIR-1 attack score on Qwen-2.5-14B (71.45 &rarr; 20.09); &asymp; 0 vs Template &amp; DAN
+              </div>
             </div>
           </div>
         </div>
